@@ -46,19 +46,7 @@ export default function App() {
   
   const { user, isAuthenticated, isLoading, signUp, login, logout } = useAuth();
 
-  // Show sign-up flow for new users
-  if (isLoading) {
-    return (
-      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900">
-        <div className="text-white text-xl">Loading...</div>
-      </div>
-    );
-  }
-
-  if (!user) {
-    return <SignUpFlow onComplete={signUp} />;
-  }
-
+  // Define all functions and effects before any early returns
   const handleLogin = (email: string, password: string) => {
     const success = login(email, password);
     if (success) {
@@ -72,6 +60,10 @@ export default function App() {
 
   const handleLogout = () => {
     logout();
+  };
+
+  const handleECGComplete = () => {
+    setShowECG(false);
   };
 
   useEffect(() => {
@@ -90,9 +82,18 @@ export default function App() {
     ? 'https://images.unsplash.com/photo-1513153090511-22df4c6ad14e?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxtb3JuaW5nJTIwbGFuZHNjYXBlJTIwc3Vuc2hpbmV8ZW58MXx8fHwxNzYyMzI4MjU1fDA&ixlib=rb-4.1.0&q=80&w=1080'
     : 'https://images.unsplash.com/photo-1633066439796-c87a600a4785?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxkZXNlcnQlMjBmaXJlJTIwbW9vbiUyMG5pZ2h0fGVufDF8fHx8MTc2MjMyODI1Nnww&ixlib=rb-4.1.0&q=80&w=1080';
 
-  const handleECGComplete = () => {
-    setShowECG(false);
-  };
+  // Show sign-up flow for new users
+  if (isLoading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900">
+        <div className="text-white text-xl">Loading...</div>
+      </div>
+    );
+  }
+
+  if (!user) {
+    return <SignUpFlow onComplete={signUp} />;
+  }
 
   // Show ECG animation after login
   if (showECG) {
