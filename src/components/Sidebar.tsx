@@ -80,7 +80,7 @@ export function Sidebar({ activeTab, onTabChange, isDayTime, onLogout }: Sidebar
               <div className="ml-auto flex gap-1">
                 <span className={`w-1.5 h-1.5 rounded-full transition-all ${mode === 'hover' ? 'bg-yellow-400 scale-125' : 'bg-white/20'}`} />
                 <span className={`w-1.5 h-1.5 rounded-full transition-all ${mode === 'locked' ? 'bg-green-400 scale-125' : 'bg-white/20'}`} />
-                <span className={`w-1.5 h-1.5 rounded-full transition-all ${mode === 'collapsed' ? 'bg-blue-400 scale-125' : 'bg-white/20'}`} />
+                <span className={`w-1.5 h-1.5 rounded-full transition-all bg-white/20`} />
               </div>
             )}
           </button>

@@ -44,7 +44,7 @@ export default function App() {
   const [isDayTime, setIsDayTime] = useState(true);
   const [showECG, setShowECG] = useState(false);
   
-  const { user, isAuthenticated, isLoading, signUp, login } = useAuth();
+  const { user, isAuthenticated, isLoading, signUp, login, logout } = useAuth();
 
   // Show sign-up flow for new users
   if (isLoading) {
@@ -62,28 +62,16 @@ export default function App() {
   const handleLogin = (email: string, password: string) => {
     const success = login(email, password);
     if (success) {
-      const authData = {
-        email,
-        timestamp: new Date().toISOString(),
-      };
-    localStorage.setItem(AUTH_KEY, JSON.stringify(authData));
-    setShowECG(true);
-  };
-
-  const handleECGComplete = () => {
-    setShowECG(false);
-    setIsAuthenticated(true);
-  };
-
-  const handleLogout = () => {
-    localStorage.setItem('spop-last-login', JSON.stringify(authData));
       setShowECG(true);
       setTimeout(() => {
         setShowECG(false);
       }, 3000);
-      return true;
     }
-    return false;
+    return success;
+  };
+
+  const handleLogout = () => {
+    logout();
   };
 
   useEffect(() => {
@@ -103,7 +91,7 @@ export default function App() {
     : 'https://images.unsplash.com/photo-1633066439796-c87a600a4785?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxkZXNlcnQlMjBmaXJlJTIwbW9vbiUyMG5pZ2h0fGVufDF8fHx8MTc2MjMyODI1Nnww&ixlib=rb-4.1.0&q=80&w=1080';
 
   const handleECGComplete = () => {
-    // ECG animation completed
+    setShowECG(false);
   };
 
   // Show ECG animation after login
