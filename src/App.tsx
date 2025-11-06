@@ -10,7 +10,6 @@ import { Sidebar } from './components/Sidebar';
 import { LoginScreen } from './components/LoginScreen';
 import { SignUpFlow } from './components/SignUpFlow';
 import { ECGAnimation } from './components/ECGAnimation';
-import { ImageWithFallback } from './components/figma/ImageWithFallback';
 
 export default function App() {
   const {
@@ -44,46 +43,26 @@ export default function App() {
   const [isDayTime, setIsDayTime] = useState(true);
   const [showECG, setShowECG] = useState(false);
   
-  const { user, isAuthenticated, isLoading, signUp, login } = useAuth();
+  const { user, isAuthenticated, isLoading, signUp, login, logout } = useAuth();
 
-  // Show sign-up flow for new users
-  if (isLoading) {
-    return (
-      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900">
-        <div className="text-white text-xl">Loading...</div>
-      </div>
-    );
-  }
-
-  if (!user) {
-    return <SignUpFlow onComplete={signUp} />;
-  }
-
+  // Define all functions and effects before any early returns
   const handleLogin = (email: string, password: string) => {
     const success = login(email, password);
     if (success) {
-      const authData = {
-        email,
-        timestamp: new Date().toISOString(),
-      };
-    localStorage.setItem(AUTH_KEY, JSON.stringify(authData));
-    setShowECG(true);
-  };
-
-  const handleECGComplete = () => {
-    setShowECG(false);
-    setIsAuthenticated(true);
-  };
-
-  const handleLogout = () => {
-    localStorage.setItem('spop-last-login', JSON.stringify(authData));
       setShowECG(true);
       setTimeout(() => {
         setShowECG(false);
       }, 3000);
-      return true;
     }
-    return false;
+    return success;
+  };
+
+  const handleLogout = () => {
+    logout();
+  };
+
+  const handleECGComplete = () => {
+    setShowECG(false);
   };
 
   useEffect(() => {
@@ -98,13 +77,18 @@ export default function App() {
     return () => clearInterval(interval);
   }, []);
 
-  const backgroundImage = isDayTime
-    ? 'https://images.unsplash.com/photo-1513153090511-22df4c6ad14e?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxtb3JuaW5nJTIwbGFuZHNjYXBlJTIwc3Vuc2hpbmV8ZW58MXx8fHwxNzYyMzI4MjU1fDA&ixlib=rb-4.1.0&q=80&w=1080'
-    : 'https://images.unsplash.com/photo-1633066439796-c87a600a4785?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxkZXNlcnQlMjBmaXJlJTIwbW9vbiUyMG5pZ2h0fGVufDF8fHx8MTc2MjMyODI1Nnww&ixlib=rb-4.1.0&q=80&w=1080';
+  // Show sign-up flow for new users
+  if (isLoading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900">
+        <div className="text-white text-xl">Loading...</div>
+      </div>
+    );
+  }
 
-  const handleECGComplete = () => {
-    // ECG animation completed
-  };
+  if (!user) {
+    return <SignUpFlow onComplete={signUp} />;
+  }
 
   // Show ECG animation after login
   if (showECG) {
@@ -118,16 +102,14 @@ export default function App() {
   // Show login screen if not authenticated
   if (!isAuthenticated) {
     return (
-      <div className="min-h-screen relative overflow-hidden">
-        {/* Animated Background */}
+      <div className="min-h-screen relative overflow-hidden bg-gradient-to-br from-slate-900 via-teal-900 to-cyan-900">
+        {/* Animated Background Gradient */}
         <div className="fixed inset-0 z-0">
-          <ImageWithFallback
-            src={backgroundImage}
-            alt="Background"
-            className="w-full h-full object-cover transition-opacity duration-1000"
-          />
-          <div className="absolute inset-0 bg-gradient-to-br from-slate-900/70 via-teal-900/60 to-cyan-900/70" />
-          <div className="absolute inset-0 backdrop-blur-sm" />
+          <div className="absolute inset-0 bg-gradient-to-br from-slate-900/90 via-teal-900/80 to-cyan-900/90" />
+          {/* Subtle animated overlay */}
+          <div className="absolute inset-0 opacity-30">
+            <div className="absolute inset-0 bg-gradient-to-br from-teal-500/20 via-transparent to-cyan-500/20 animate-pulse" />
+          </div>
         </div>
 
         <LoginScreen onLogin={handleLogin} />
@@ -136,16 +118,14 @@ export default function App() {
   }
 
   return (
-    <div className="min-h-screen relative overflow-hidden">
-      {/* Animated Background */}
+    <div className="min-h-screen relative overflow-hidden bg-gradient-to-br from-slate-900 via-teal-900 to-cyan-900">
+      {/* Animated Background Gradient */}
       <div className="fixed inset-0 z-0">
-        <ImageWithFallback
-          src={backgroundImage}
-          alt="Background"
-          className="w-full h-full object-cover transition-opacity duration-1000"
-        />
-        <div className="absolute inset-0 bg-gradient-to-br from-slate-900/60 via-teal-900/50 to-cyan-900/60" />
-        <div className="absolute inset-0 backdrop-blur-[2px]" />
+        <div className="absolute inset-0 bg-gradient-to-br from-slate-900/85 via-teal-900/75 to-cyan-900/85" />
+        {/* Subtle animated overlay */}
+        <div className="absolute inset-0 opacity-20">
+          <div className="absolute inset-0 bg-gradient-to-br from-teal-500/20 via-transparent to-cyan-500/20 animate-pulse" />
+        </div>
       </div>
 
       {/* Floating Animated Orbs */}

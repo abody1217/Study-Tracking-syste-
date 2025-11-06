@@ -27,8 +27,10 @@ export function generateExamsFromDates(
     exams.push({
       id: crypto.randomUUID(),
       name: '📋 Midterm / Continuous Exam',
+      type: 'MIDTERM',
       date: subject.midtermDate,
       time: '09:00',
+      totalScore: subject.gradeDistribution?.midterm || 100,
       includedLectures: midtermLectureIds,
       coveragePercentage: midtermTopics.length > 0 
         ? Math.round((midtermTopics.length / (subject.totalLectures || lectures.length)) * 100)
@@ -41,8 +43,10 @@ export function generateExamsFromDates(
     exams.push({
       id: crypto.randomUUID(),
       name: '🎓 Final Exam',
+      type: 'FINAL',
       date: subject.finalDate,
       time: '09:00',
+      totalScore: subject.gradeDistribution?.finalMCQ || subject.gradeDistribution?.finalEssay || 100,
       includedLectures: lectures.map(l => l.id), // All lectures for final
       coveragePercentage: 100,
     });
